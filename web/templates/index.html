@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AI Assisted PC Building</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <h1>AI Assisted PC Building</h1>
+        <div>
+            <form>
+                <label for="budget">Budget:</label>
+                <input type="text" id="budget" name="budget"><br>
+                <p>Usage:</p>
+                <input type="radio" id="general" name="usage" value="general">
+                <label for="general">General</label><br>
+                <input type="radio" id="gaming" name="usage" value="gaming">
+                <label for="gaming">Gaming</label><br>
+                <input type="radio" id="editing" name="usage" value="editing">
+                <label for="editing">Editing</label><br>
+                <button type="submit" value="Submit">
+            </form>
+        </div>
+        <div>
+            <table>
+                <th>Suggested PC Build</th>
+                <tr>
+                    <td>CPU</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>CPU Cooler</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Motherboard</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>RAM</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Storage</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Graphic Card</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>PSU</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Case</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
