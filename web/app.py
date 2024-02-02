@@ -1,10 +1,20 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request
+import numpy as np
+from joblib import load
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    return render_template("index.html")
+    request_type = request.method
+    if request_type == 'GET': 
+        return render_template("index.html")
+    else:
+        budget = int(request.form['budget'])
+        usage = int(request.form['usage'])
+        model = load('web/regression_model.joblib')
+        pred = model.predict(np.array([[usage, budget]]))
+        return str(pred)
 
 if __name__ == "__main__":
     app.run(debug=True)
