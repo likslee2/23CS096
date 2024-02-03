@@ -14,7 +14,7 @@ def index():
         usage = int(request.form['usage'])
         model = load('web/regression_model.joblib')
         pred = model.predict(np.array([[usage, budget]]))
-        return str(pred)
+        return render_template("index.html", result=pred)
 
 if __name__ == "__main__":
     app.run(debug=True)
