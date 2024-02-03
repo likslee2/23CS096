@@ -12,7 +12,7 @@ def index():
     else:
         budget = int(request.form['budget'])
         usage = int(request.form['usage'])
-        model = load('web/regression_model.joblib')
+        model = load('regression_model.joblib')
         pred = model.predict(np.array([[usage, budget]]))
         return render_template("index.html", result=pred)
 
