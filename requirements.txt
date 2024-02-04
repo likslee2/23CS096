@@ -2,3 +2,5 @@ Flask
 gunicorn
 sqlalchemy
 pymysql
+numpy
+joblib
