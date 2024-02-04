@@ -81,9 +81,12 @@
                     <td>
                         {{ build['case']['Brand'] }} {{ build['case']['Model'] }}
                     </td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        $ {{ build['case']['Price'] }}
+                    </td>
+                    <td>
+                        <!-- <button type="button" class="btn btn-primary">Buy</button> -->
+                        <a href="https://amazon.com/dp/B07TD9C5HS?tag=pcbuilder00-20" class="btn btn-primary" role="button" aria-disabled="true">Buy</a>
                     </td>
                 </tr>
                 <tr>

@@ -24,7 +24,7 @@ def load_build_parts(pred):
 def index():
     request_type = request.method
     if request_type == 'GET': 
-        return render_template("index.html")
+        return render_template("result.html")
     else:
         budget = int(request.form['budget'])
         usage = int(request.form['usage'])
