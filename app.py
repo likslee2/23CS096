@@ -13,8 +13,8 @@ def load_build_parts(pred):
             'cooler': '',
             'motherboard': '',
             'ram': '',
-            'gpg': '',
             'storage': '',
+            'gpu': '',
             'psu': '',
             'case': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone()
         }

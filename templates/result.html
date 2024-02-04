@@ -22,58 +22,86 @@
                 </thead>
                 <tr>
                     <td>CPU</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['cpu']['Brand'] }} {{ build['cpu']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['cpu']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['cpu']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>CPU Cooler</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['cooler']['Brand'] }} {{ build['cooler']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['cooler']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['cooler']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Motherboard</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['motherboard']['Brand'] }} {{ build['motherboard']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['motherboard']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['motherboard']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>RAM</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['ram']['Brand'] }} {{ build['ram']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['ram']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['ram']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Storage</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['storage']['Brand'] }} {{ build['storage']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['storage']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['storage']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Graphic Card</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['gpu']['Brand'] }} {{ build['gpu']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['gpu']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['gpu']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
                     <td>PSU</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary">Buy</button>
+                        {{ build['psu']['Brand'] }} {{ build['psu']['Model'] }}
+                    </td>
+                    <td>
+                        $ {{ build['psu']['Price'] }}
+                    </td>
+                    <td>
+                        <a href="{{ build['psu']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
@@ -86,7 +114,7 @@
                     </td>
                     <td>
                         <!-- <button type="button" class="btn btn-primary">Buy</button> -->
-                        <a href="https://amazon.com/dp/B07TD9C5HS?tag=pcbuilder00-20" class="btn btn-primary" role="button" aria-disabled="true">Buy</a>
+                        <a href="{{ build['case']['Link'] }}" class="btn btn-primary" role="button">Buy</a>
                     </td>
                 </tr>
                 <tr>
