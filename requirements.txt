@@ -1,7 +1,4 @@
 Flask
 gunicorn
-numpy
-joblib
 sqlalchemy
-database
-os
+pymysql
