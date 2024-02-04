@@ -3,5 +3,5 @@ gunicorn
 numpy
 joblib
 sqlalchemy
-pymysql
 database
+os
