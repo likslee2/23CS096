@@ -9,13 +9,13 @@ app = Flask(__name__)
 def load_build_parts(pred):
     with engine.connect() as connection:
         build = {
-            'cpu': '',
-            'cooler': '',
-            'motherboard': '',
-            'ram': '',
-            'storage': '',
-            'gpu': '',
-            'psu': '',
+            'cpu': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'cooler': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'motherboard': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'ram': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'storage': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'gpu': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
+            'psu': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone(),
             'case': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone()
         }
     return build
@@ -24,7 +24,7 @@ def load_build_parts(pred):
 def index():
     request_type = request.method
     if request_type == 'GET': 
-        return render_template("result.html")
+        return render_template("index.html")
     else:
         budget = int(request.form['budget'])
         usage = int(request.form['usage'])
