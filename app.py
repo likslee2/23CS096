@@ -9,6 +9,13 @@ app = Flask(__name__)
 def load_build_parts(pred):
     with engine.connect() as connection:
         build = {
+            'cpu': '',
+            'cooler': '',
+            'motherboard': '',
+            'ram': '',
+            'gpg': '',
+            'storage': '',
+            'psu': '',
             'case': connection.execute(text("SELECT * FROM cases WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price = pred[0][19]))).fetchone()
         }
     return build
@@ -21,8 +28,8 @@ def index():
     else:
         budget = int(request.form['budget'])
         usage = int(request.form['usage'])
-        model = load('regression_model.joblib')
-        regression_pred = model.predict(np.array([[usage, budget]]))
+        regression_model = load('regression_model.joblib')
+        regression_pred = regression_model.predict(np.array([[usage, budget]]))
         
         build = load_build_parts(regression_pred)
 
