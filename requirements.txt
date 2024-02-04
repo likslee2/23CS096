@@ -4,4 +4,4 @@ sqlalchemy
 pymysql
 numpy
 joblib
-sklearn
+scikit-learn
