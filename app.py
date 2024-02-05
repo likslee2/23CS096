@@ -15,15 +15,20 @@ def features_onehot(budget, usage):
 def load_build_parts(regression_pred, classification_pred):
     with engine.connect() as connection:
         build = {
-            'cpu': connection.execute(text("SELECT * FROM cpu_dataset WHERE Price <={price:.2f} AND Cores >= {cores} AND Threads >={threads} AND Base speed >= {base_speed} AND Turbo speed >= {turbo_speed} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[0], cores=regression_pred[1], threads=regression_pred[2], base_speed=regression_pred[3], turbo_speed=regression_pred[4]))).fetchone(),
-            'cooler': connection.execute(text("SELECT * FROM cooling_dataset WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[5]))).fetchone(),
-            'motherboard': connection.execute(text("SELECT * FROM motherboard_dataset WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[6]))).fetchone(),
-            'ram': connection.execute(text("SELECT * FROM ram_dataset WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[7]))).fetchone(),
-            'storage': connection.execute(text("SELECT * FROM storage_dataset WHERE Price <={price:.2f} AND Type = '{type}' ORDER BY Price DESC LIMIT 1".format(price=regression_pred[15], type=classification_pred[1]))).fetchone(),
-            'gpu': connection.execute(text("SELECT * FROM gpu_dataset WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[12]))).fetchone(),
-            'psu': connection.execute(text("SELECT * FROM psu_dataset WHERE Price <={price:.2f} AND Efficiency = '{efficiency}' ORDER BY Price DESC LIMIT 1".format(price=regression_pred[17], efficiency=classification_pred[2]))).fetchone(),
-            'case': connection.execute(text("SELECT * FROM case_dataset WHERE Price <={price:.2f} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[18]))).fetchone()
+            'cpu': connection.execute(text("SELECT * FROM cpu_dataset WHERE Price <= {price:.2f} AND Cores <= {cores} AND Threads <= {threads} AND 'Base Speed' <= {base_speed} AND 'Turbo Speed' <= {turbo_speed} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[0], cores=regression_pred[1], threads=regression_pred[2], base_speed=regression_pred[3], turbo_speed=regression_pred[4]))).fetchone(),
+            'cooler': connection.execute(text("SELECT * FROM cooling_dataset WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[5]))).fetchone(),
+            'motherboard': connection.execute(text("SELECT * FROM motherboard_dataset WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[6]))).fetchone(),
+            'ram': connection.execute(text("SELECT * FROM ram_dataset WHERE Price <= {price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[7], size=regression_pred[8], quantity=round(regression_pred[9], 1), speed=regression_pred[10]))).fetchone(),
+            # 'ram': connection.execute(text("SELECT * FROM ram_dataset WHERE Price <= {price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} AND 'CAS latency' >= {cl} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[7], size=regression_pred[8], quantity=round(regression_pred[9], 1), speed=regression_pred[10], cl=regression_pred[11]))).fetchone(),
+
+            'storage': connection.execute(text("SELECT * FROM storage_dataset WHERE Price <= {price:.2f} AND Type = '{type}' ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[15], type=classification_pred[1]))).fetchone(),
+            'gpu': connection.execute(text("SELECT * FROM gpu_dataset WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[12]))).fetchone(),
+            'psu': connection.execute(text("SELECT * FROM psu_dataset WHERE Price <= {price:.2f} AND Efficiency = '{efficiency}' ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[17], efficiency=classification_pred[2]))).fetchone(),
+            'case': connection.execute(text("SELECT * FROM case_dataset WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(price=regression_pred[18]))).fetchone()
         }
+        print(text("SELECT * FROM ram_dataset WHERE Price <={price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} AND 'CAS latency' >= {cl} ORDER BY Price DESC LIMIT 1".format(price=regression_pred[7], size=regression_pred[8], quantity=int(regression_pred[9]), speed=regression_pred[10], cl=regression_pred[11])))
+        for i in build:
+            print(build[i])
     return build
 
 
@@ -31,7 +36,7 @@ def cal_cost(build):
     cost = 0
     for component in build:
         cost += float(build[component]['Price'])
-    return cost
+    return round(cost, 2)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
