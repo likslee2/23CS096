@@ -59,7 +59,7 @@
                 <tr>
                     <td>RAM</td>
                     <td>
-                        {{ build['ram']['Brand'] }} {{ build['ram']['Model'] }}
+                        {{ build['ram']['Brand'] }} {{ build['ram']['Model'] }} ({{ build['ram']['Quantity'] }}x{{ components_info['ram_size'] }}GB) {{ build['ram']['Ram type'] }} {{ build['ram']['Ram speed'] }}MHz CL{{ build['ram']['CAS latency'] }}
                     </td>
                     <td>
                         ${{ build['ram']['Price'] }}
@@ -71,7 +71,7 @@
                 <tr>
                     <td>Storage</td>
                     <td>
-                        {{ build['storage']['Brand'] }} {{ build['storage']['Model'] }}
+                        {{ build['storage']['Brand'] }} {{ build['storage']['Model'] }} {{ build['storage']['Capacity'] }}GB {{ build['storage']['Type'] }}
                     </td>
                     <td>
                         ${{ build['storage']['Price'] }}
@@ -83,7 +83,7 @@
                 <tr>
                     <td>Graphic Card</td>
                     <td>
-                        {{ build['gpu']['Brand'] }} {{ build['gpu']['Model'] }}
+                        {{ build['gpu']['Brand'] }} {{ build['gpu']['Model'] }} {{ build['gpu']['Chipset'] }} {{ components_info['gpu_memory'] }}GB {{ build['gpu']['Memory type'] }}
                     </td>
                     <td>
                         ${{ build['gpu']['Price'] }}
@@ -95,7 +95,7 @@
                 <tr>
                     <td>PSU</td>
                     <td>
-                        {{ build['psu']['Brand'] }} {{ build['psu']['Model'] }}
+                        {{ build['psu']['Brand'] }} {{ build['psu']['Model'] }} {{ build['psu']['Power'] }}W {{ build['psu']['Efficiency'] }}
                     </td>
                     <td>
                         ${{ build['psu']['Price'] }}
@@ -113,7 +113,6 @@
                         ${{ build['case']['Price'] }}
                     </td>
                     <td>
-                        <!-- <button type="button" class="btn btn-primary">Buy</button> -->
                         <a href="{{ build['case']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
                     </td>
                 </tr>
@@ -121,7 +120,7 @@
                     <td></td>
                     <td></td>
                     <td>
-                        Total:
+                        Total: ${{ cost }}
                     </td>
                     <td></td>
                 </tr>
