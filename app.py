@@ -14,18 +14,25 @@ def features_onehot(budget, usage):
 
 def load_build_parts(pred):
     with engine.connect() as connection:
-        cpu = connection.execute(text("SELECT * FROM cpus WHERE Price <= {price:.2f} AND Cores <= {cores} AND Threads <= {threads} AND 'Base Speed' <= {base_speed} AND 'Turbo Speed' <= {turbo_speed} ORDER BY price DESC LIMIT 1;".format(price=pred["cpu"]["price"], cores=pred["cpu"]["price"], threads=pred["cpu"]["price"], base_speed=pred["cpu"]["base_speed"], turbo_speed=pred["cpu"]["turbo_speed"]))).fetchone()
+        cpu = connection.execute(text("SELECT *, SQRT(POW((Cores - {cores}), 2) + POW(({threads} - 20), 2) + POW((Base_Speed - {base_speed}), 2) + POW((Turbo_Speed -  {turbo_speed}), 2)) AS distance FROM cpus WHERE Price <= {price:.2f} ORDER BY distance LIMIT 1;".format(price=pred["cpu"]["price"], cores=pred["cpu"]["price"], threads=pred["cpu"]["price"], base_speed=pred["cpu"]["base_speed"], turbo_speed=pred["cpu"]["turbo_speed"]))).fetchone()
+        
         if (pred["cooler"]["type"] != "None"):
             cooler = connection.execute(text("SELECT * FROM coolers WHERE Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(price=pred["cooler"]["price"]))).fetchone()
         motherboard = connection.execute(text("SELECT * FROM motherboards WHERE Socket_type = '{type}' AND Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(type=cpu["Socket Type"], price=pred["motherboard"]["price"]))).fetchone()
-        ram1 = connection.execute(text("SELECT * FROM rams WHERE Ram_standard = '{standard}' AND Price <= {price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} ORDER BY price DESC LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram1"]["price"], size=pred["ram1"]["size"], quantity=round(pred["ram1"]["quantity"], 1), speed=pred["ram1"]["speed"], ))).fetchone()
+        
+        ram1 = connection.execute(text("SELECT *, SQRT(POW((Ram_size - {size}), 2) + POW((Ram_speed - {speed}), 2) + POW((CAS_latency -  {cl}), 2)) AS distance FROM rams WHERE Price <= {price:.2f} AND Ram_standard = '{standard}' AND Quantity <= {quantity} ORDER BY distance LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram1"]["price"], size=pred["ram1"]["size"], quantity=round(pred["ram1"]["quantity"], 1), speed=pred["ram1"]["speed"], cl=pred["ram1"]["cl"]))).fetchone()
+        
         if (pred["ram2"]["quantity"] >= 1):
-            ram2 = connection.execute(text("SELECT * FROM rams WHERE Ram_standard = '{standard}' AND Price <= {price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} ORDER BY price DESC LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram2"]["price"], size=pred["ram2"]["size"], quantity=round(pred["ram2"]["quantity"], 1), speed=pred["ram2"]["speed"]))).fetchone()
+            ram2 = connection.execute(text("SELECT *, SQRT(POW((Ram_size - {size}), 2) + POW((Ram_speed - {speed}), 2) + POW((CAS_latency -  {cl}), 2)) AS distance FROM rams WHERE Price <= {price:.2f} AND Ram_standard = '{standard}' AND Quantity <= {quantity} ORDER BY distance LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram2"]["price"], size=pred["ram2"]["size"], quantity=round(pred["ram2"]["quantity"], 1), speed=pred["ram2"]["speed"], cl=pred["ram2"]["cl"]))).fetchone()
         else:
             ram2 = None
-        storage = connection.execute(text("SELECT * FROM storages WHERE Price <= {price:.2f} AND Type = '{type}' ORDER BY price DESC LIMIT 1;".format(price=pred["storage"]["price"], type=pred["storage"]["type"]))).fetchone()
-        gpu = connection.execute(text("SELECT * FROM gpus WHERE Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(price=pred["gpu"]["price"]))).fetchone()
+        
+        storage = connection.execute(text("SELECT *, SQRT(POW((Capacity - {capacity}), 2)) AS distance FROM storages WHERE Price <= {price:.2f} AND Type = '{type}' ORDER BY distance ASC, Price DESC LIMIT 1;".format(capacity=pred["storage"]["capacity"], price=pred["storage"]["price"], type=pred["storage"]["type"]))).fetchone()
+        
+        gpu = connection.execute(text("SELECT *, SQRT(POW((Base_clock - {speed}), 2) + POW((Memory - {memory}), 2)) AS distance FROM gpus WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(speed=pred["gpu"]["speed"], memory=pred["gpu"]["memory"], price=pred["gpu"]["price"]))).fetchone()
+        
         psu = connection.execute(text("SELECT * FROM psus WHERE Price <= {price:.2f} AND Efficiency = '{efficiency}' ORDER BY price DESC LIMIT 1;".format(price=pred["psu"]["price"], efficiency=pred["psu"]["efficiency"]))).fetchone()
+        
         if (motherboard["Form factor"] == "ATX" or motherboard["Form factor"] == "Extended ATX"): 
             cabinet_type = "ATX%"
         elif motherboard["Form factor"] == "Mirco ATX":
@@ -45,7 +52,8 @@ def load_build_parts(pred):
             'psu': psu,
             'case': case
         }
-        # print(text("SELECT * FROM rams WHERE Price <={price:.2f} AND 'Ram size' <= {size} AND Quantity <= {quantity} AND 'Ram speed' <= {speed} AND 'CAS latency' >= {cl} ORDER BY price DESC LIMIT 1".format(price=regression_pred[7], size=regression_pred[8], quantity=int(regression_pred[9]), speed=regression_pred[10], cl=regression_pred[11])))
+
+        print("Result Build: ")
         for i in build:
             print(build[i])
     return build
@@ -108,7 +116,7 @@ def index():
             },
             "storage" : {
                 "price" : regression_pred[20],
-                "capicity" : regression_pred[21],
+                "capacity" : regression_pred[21],
                 "type" : classification_pred[3]
             },
             "psu" : {
@@ -119,12 +127,15 @@ def index():
                 "price" : regression_pred[23],
             }
         }
-        print(pred)
+        print("Prediction: ")
+        for i in pred:
+            print(i, pred[i])
+        print('\n')
         
         build = load_build_parts(pred)
         total_cost = cal_total_cost(build)
         components_info = {
-            'ram1_size': int(int(build['ram1']['Ram size'])/int(build['ram1']['Quantity'])),
+            'ram1_size': int(int(build['ram1']['Ram_size'])/int(build['ram1']['Quantity'])),
             'gpu_memory': int(build['gpu']['Memory'])
         }
         
