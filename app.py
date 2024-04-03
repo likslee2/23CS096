@@ -69,7 +69,7 @@ def cal_total_cost(build):
 def index():
     request_type = request.method
     if request_type == 'GET': 
-        return render_template("index2.html")
+        return render_template("index.html", build=None)
     else:
         query_features = features_onehot(int(request.form['budget']), request.form['usage'])
         
@@ -139,7 +139,7 @@ def index():
             'gpu_memory': int(build['gpu']['Memory'])
         }
         
-        return render_template("result2.html", build=build, total_cost=total_cost, components_info=components_info)
+        return render_template("index.html", build=build, total_cost=total_cost, components_info=components_info, scroll_id='result')
 
 if __name__ == "__main__":
     app.run(debug=True)
