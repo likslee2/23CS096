@@ -3,8 +3,12 @@ import numpy as np
 from joblib import load
 from database import engine
 from sqlalchemy import text
+from forex_python.converter import CurrencyRates
 
 app = Flask(__name__)
+cr = CurrencyRates()
+hkd_to_usd = cr.get_rate('HKD', 'USD')
+usd_to_hkd = cr.get_rate('USD', 'HKD')
 
 def features_onehot(budget, usage):
     if usage == "office work": return np.array([[0, 0, 1, budget]])
@@ -58,12 +62,11 @@ def load_build_parts(pred):
             print(build[i])
     return build
 
-
 def cal_total_cost(build):
     total_cost = 0
     for component in build:
         if build[component] != None: total_cost += float(build[component]['Price'])
-    return round(total_cost, 2)
+    return round(total_cost*usd_to_hkd, 2)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -71,7 +74,7 @@ def index():
     if request_type == 'GET': 
         return render_template("index.html", build=None)
     else:
-        query_features = features_onehot(int(request.form['budget']), request.form['usage'])
+        query_features = features_onehot(int(request.form['budget'])*hkd_to_usd, request.form['usage'])
         
         regression_model = load('multiple_regression_model.joblib')
         regression_pred = regression_model.predict(query_features)[0]
@@ -138,8 +141,15 @@ def index():
             'ram1_size': int(int(build['ram1']['Ram_size'])/int(build['ram1']['Quantity'])),
             'gpu_memory': int(build['gpu']['Memory'])
         }
+
+        converted_price=[]
+        for component in build:
+            if (build[component] == None):
+                converted_price.append(0)
+                continue
+            converted_price.append(round(build[component]['Price']*usd_to_hkd, 2))
         
-        return render_template("index.html", build=build, total_cost=total_cost, components_info=components_info, scroll_id='result')
+        return render_template("index.html", build=build, total_cost=total_cost, components_info=components_info, scroll_id='result', converted_price=converted_price)
 
 if __name__ == "__main__":
     app.run(debug=True)

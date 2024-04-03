@@ -125,7 +125,7 @@
                             {{ build['cpu']['Brand'] }} {{ build['cpu']['Model'] }}
                         </td>
                         <td>
-                            ${{ build['cpu']['Price'] }}
+                            ${{ converted_price[0] }}
                         </td>
                         <td>
                             <a href="{{ build['cpu']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -137,7 +137,7 @@
                             {{ build['cooler']['Brand'] }} {{ build['cooler']['Model'] }}
                         </td>
                         <td>
-                            ${{ build['cooler']['Price'] }}
+                            ${{ converted_price[1] }}
                         </td>
                         <td>
                             <a href="{{ build['cooler']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -149,7 +149,7 @@
                             {{ build['motherboard']['Brand'] }} {{ build['motherboard']['Model'] }}
                         </td>
                         <td>
-                            ${{ build['motherboard']['Price'] }}
+                            ${{ converted_price[2] }}
                         </td>
                         <td>
                             <a href="{{ build['motherboard']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -161,7 +161,7 @@
                             {{ build['ram1']['Brand'] }} {{ build['ram1']['Model'] }} ({{ build['ram1']['Quantity'] }}x{{ components_info['ram1_size'] }}GB) {{ build['ram1']['ram1 type'] }} {{ build['ram1']['Ram_speed'] }}MHz CL{{ build['ram1']['CAS_latency'] }}
                         </td>
                         <td>
-                            ${{ build['ram1']['Price'] }}
+                            ${{ converted_price[3] }}
                         </td>
                         <td>
                             <a href="{{ build['ram1']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -174,7 +174,7 @@
                                 {{ build['ram2']['Brand'] }} {{ build['ram2']['Model'] }} ({{ build['ram2']['Quantity'] }}x{{ components_info['ram2_size'] }}GB) {{ build['ram2']['ram2 type'] }} {{ build['ram2']['Ram_speed'] }}MHz CL{{ build['ram2']['CAS_latency'] }}
                             </td>
                             <td>
-                                ${{ build['ram2']['Price'] }}
+                                ${{ converted_price[4] }}
                             </td>
                             <td>
                                 <a href="{{ build['ram2']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -187,7 +187,7 @@
                             {{ build['storage']['Brand'] }} {{ build['storage']['Model'] }} {{ build['storage']['Capacity'] }}GB {{ build['storage']['Type'] }}
                         </td>
                         <td>
-                            ${{ build['storage']['Price'] }}
+                            ${{ converted_price[5] }}
                         </td>
                         <td>
                             <a href="{{ build['storage']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -199,7 +199,7 @@
                             {{ build['gpu']['Brand'] }} {{ build['gpu']['Model'] }} {{ build['gpu']['Chipset'] }} {{ components_info['gpu_memory'] }}GB {{ build['gpu']['Memory type'] }}
                         </td>
                         <td>
-                            ${{ build['gpu']['Price'] }}
+                            ${{ converted_price[6] }}
                         </td>
                         <td>
                             <a href="{{ build['gpu']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -211,7 +211,7 @@
                             {{ build['psu']['Brand'] }} {{ build['psu']['Model'] }} {{ build['psu']['Power'] }}W {{ build['psu']['Efficiency'] }}
                         </td>
                         <td>
-                            ${{ build['psu']['Price'] }}
+                            ${{ converted_price[7] }}
                         </td>
                         <td>
                             <a href="{{ build['psu']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
@@ -223,7 +223,7 @@
                             {{ build['case']['Brand'] }} {{ build['case']['Model'] }}
                         </td>
                         <td>
-                            ${{ build['case']['Price'] }}
+                            ${{ converted_price[8] }}
                         </td>
                         <td>
                             <a href="{{ build['case']['Link'] }}" class="btn btn-primary" role="button" target="_blank">Buy</a>
