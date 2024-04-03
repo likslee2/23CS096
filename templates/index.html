@@ -1,42 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>AI Assisted PC Building</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <!-- Bootstrap Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- SimpleLightbox plugin CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
+        <!-- CSS -->
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
     </head>
-    <body>
-        <h1 class="text-center">AI Assisted PC Building</h1>
-        <div class="container">
-            <form method="POST">
-                <div class="form-group row">
-                    <div class="col-sm-4">
-                        <label for="budget" class="col-sm-2 col-form-label">Budget:</label>
-                        <input type="text" id="budget" name="budget" class="col-sm-4">
+    <body id="page-top">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">CityU CS FYP</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#assist">Build Assist</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Masthead -->
+        <header class="masthead">
+            <div class="container px-4 px-lg-5 h-100">
+                <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
+                    <div class="col-lg-8 align-self-end">
+                        <h1 class="text-white font-weight-bold">AI Assisted PC Building</h1>
+                        <hr class="divider" />
                     </div>
-                    <div class="col-sm-6">
-                            <label class="col-form-label">Usage:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="general" name="usage" value="office work">
-                                <label class="form-check-label" for="general">Office work</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="gaming" name="usage" value="gaming">
-
-                                <label class="form-check-label" for="gaming">Gaming</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="editing" name="usage" value="editing">
-                                <label class="form-check-label" for="editing">Editing</label>
-                            </div>
-                    </div>
-                    <div class="col-sm-2"> 
-                        <input type="submit" value="Submit">
+                    <div class="col-lg-8 align-self-baseline">
+                        <p class="text-white-75 mb-5">Code: 23CS096</p>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </header>
+        <!-- About -->
+        <section class="page-section bg-primary" id="about">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="text-white mt-0">About</h2>
+                        <hr class="divider divider-light" />
+                        <p class="text-white-75 mb-4">Building a PC within a budget can be challenging, especially for individuals not familiar with the technical specifications of computer components. This project presents an application that generates PC build recommendations within budget constraints and usage. The system utilizes machine learning algorithms to recommend compatible and optimal components based on user input regarding their budget and purpose.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Build Assist -->
+        <section class="page-section" id="assist">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8 col-xl-6 text-center">
+                        <h2 class="mt-0">Build Assist</h2>
+                        <hr class="divider" />
+                        <p class="text-muted mb-5">Please input your budget and usage of PC.</p>
+                    </div>
+                </div>
+                <div class="row gx-4 gx-lg-5 justify-content-center mb-5">
+                    <div class="col-lg-6">
+                        <form id="form"  method="POST">
+                            <!-- Budget input -->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="budget" name="budget" type="text" />
+                                <label for="budget">Budget</label>
+                            </div>
+                            <!-- Usage input-->
+                            <div class="form mb-3">
+                                <label>Usage: </label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="general" name="usage" value="office work">
+                                    <label class="form-check-label" for="general">Office work</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="gaming" name="usage" value="gaming">
+
+                                    <label class="form-check-label" for="gaming">Gaming</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="editing" name="usage" value="editing">
+                                    <label class="form-check-label" for="editing">Editing</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button-->
+                            <div class="d-grid"><button class="btn btn-primary btn-xl" id="submitButton" type="submit">Submit</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Bootstrap core JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- SimpleLightbox plugin JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
+        <!-- Core theme JS -->
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
     </body>
 </html>
