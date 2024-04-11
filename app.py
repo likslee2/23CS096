@@ -74,7 +74,10 @@ def index():
     if request_type == 'GET': 
         return render_template("index.html", build=None)
     else:
-        query_features = features_onehot(int(request.form['budget'])*hkd_to_usd, request.form['usage'])
+        budget = int(request.form['budget'])*hkd_to_usd
+        usage = request.form['usage']
+        print("Budget: {b}\nUsage: {u}".format(b=int(request.form['budget']), u=usage))
+        query_features = features_onehot(budget, usage)
         
         regression_model = load('multiple_regression_model.joblib')
         regression_pred = regression_model.predict(query_features)[0]
