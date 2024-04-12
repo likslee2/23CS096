@@ -16,50 +16,108 @@ def features_onehot(budget, usage):
     elif usage == "editing": return np.array([[1, 0, 0, budget]])
     else: return False
 
+def find_cpu(price, cores, threads, base_speed, turbo_speed):
+    cpu = None
+    while cpu == None:
+        cpu = engine.connect().execute(text("SELECT *, SQRT(POW((Cores - {cores}), 2) + POW(({threads} - 20), 2) + POW((Base_Speed - {base_speed}), 2) + POW((Turbo_Speed -  {turbo_speed}), 2)) AS distance FROM cpus WHERE Price <= {price:.2f} ORDER BY distance LIMIT 1;".format(price=price, cores=cores, threads=threads, base_speed=base_speed, turbo_speed=turbo_speed))).fetchone()
+        if cpu == None: price+=13
+    return cpu
+
+def find_cooler(price):
+    cooler = None
+    while cooler == None:
+        cooler = engine.connect().execute(text("SELECT * FROM coolers WHERE Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(price=price))).fetchone()
+        if cooler == None: price+=13
+    return cooler
+
+def find_motherboard(type, price):
+    motherboard = None
+    while motherboard == None:
+        motherboard = engine.connect().execute(text("SELECT * FROM motherboards WHERE Socket_type = '{type}' AND Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(type=type, price=price))).fetchone()
+        if motherboard == None: price+=13
+    return motherboard
+
+def find_ram(standard, price, size, quantity, speed, cl):
+    ram = None
+    while ram == None:
+        ram = engine.connect().execute(text("SELECT *, SQRT(POW((Ram_size - {size}), 2) + POW((Ram_speed - {speed}), 2) + POW((CAS_latency -  {cl}), 2)) AS distance FROM rams WHERE Price <= {price:.2f} AND Ram_standard = '{standard}' AND Quantity <= {quantity} ORDER BY distance LIMIT 1;".format(standard=standard, price=price, size=size, quantity=quantity, speed=speed, cl=cl))).fetchone()
+        if ram == None: price+=13
+    return ram
+
+def find_storage(capacity, price, type):
+    storage = None
+    while storage == None:
+        storage = engine.connect().execute(text("SELECT *, SQRT(POW((Capacity - {capacity}), 2)) AS distance FROM storages WHERE Price <= {price:.2f} AND Type = '{type}' ORDER BY distance ASC, Price DESC LIMIT 1;".format(capacity=capacity, price=price, type=type))).fetchone()
+        if storage == None: price+=13
+    return storage
+
+def find_gpu(speed, memory, price):
+    gpu = None
+    while gpu == None:
+        gpu = engine.connect().execute(text("SELECT *, SQRT(POW((Base_clock - {speed}), 2) + POW((Memory - {memory}), 2)) AS distance FROM gpus WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(speed=speed, memory=memory, price=price))).fetchone()
+        if gpu == None: price+=13
+    return gpu
+
+def find_psu(price, efficiency):
+    psu = None
+    while psu == None:
+        psu = engine.connect().execute(text("SELECT * FROM psus WHERE Price <= {price:.2f} AND Efficiency = '{efficiency}' ORDER BY price DESC LIMIT 1;".format(price=price, efficiency=efficiency))).fetchone()
+        if psu == None: price+=13
+    return psu
+
+def find_case(cabinet_type, price):
+    case = None
+    while case == None:
+        case = engine.connect().execute(text("SELECT * FROM cases WHERE Cabinet_type LIKE '{cabinet_type}' AND Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(cabinet_type=cabinet_type, price=price))).fetchone()
+        if case == None: price+=13
+    return case
+
+
+
 def load_build_parts(pred):
-    with engine.connect() as connection:
-        cpu = connection.execute(text("SELECT *, SQRT(POW((Cores - {cores}), 2) + POW(({threads} - 20), 2) + POW((Base_Speed - {base_speed}), 2) + POW((Turbo_Speed -  {turbo_speed}), 2)) AS distance FROM cpus WHERE Price <= {price:.2f} ORDER BY distance LIMIT 1;".format(price=pred["cpu"]["price"], cores=pred["cpu"]["price"], threads=pred["cpu"]["price"], base_speed=pred["cpu"]["base_speed"], turbo_speed=pred["cpu"]["turbo_speed"]))).fetchone()
-        
-        if (pred["cooler"]["type"] != "None"):
-            cooler = connection.execute(text("SELECT * FROM coolers WHERE Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(price=pred["cooler"]["price"]))).fetchone()
-        motherboard = connection.execute(text("SELECT * FROM motherboards WHERE Socket_type = '{type}' AND Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(type=cpu["Socket Type"], price=pred["motherboard"]["price"]))).fetchone()
-        
-        ram1 = connection.execute(text("SELECT *, SQRT(POW((Ram_size - {size}), 2) + POW((Ram_speed - {speed}), 2) + POW((CAS_latency -  {cl}), 2)) AS distance FROM rams WHERE Price <= {price:.2f} AND Ram_standard = '{standard}' AND Quantity <= {quantity} ORDER BY distance LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram1"]["price"], size=pred["ram1"]["size"], quantity=round(pred["ram1"]["quantity"], 1), speed=pred["ram1"]["speed"], cl=pred["ram1"]["cl"]))).fetchone()
-        
-        if (pred["ram2"]["quantity"] >= 1):
-            ram2 = connection.execute(text("SELECT *, SQRT(POW((Ram_size - {size}), 2) + POW((Ram_speed - {speed}), 2) + POW((CAS_latency -  {cl}), 2)) AS distance FROM rams WHERE Price <= {price:.2f} AND Ram_standard = '{standard}' AND Quantity <= {quantity} ORDER BY distance LIMIT 1;".format(standard=cpu["Memory Generation"], price=pred["ram2"]["price"], size=pred["ram2"]["size"], quantity=round(pred["ram2"]["quantity"], 1), speed=pred["ram2"]["speed"], cl=pred["ram2"]["cl"]))).fetchone()
-        else:
-            ram2 = None
-        
-        storage = connection.execute(text("SELECT *, SQRT(POW((Capacity - {capacity}), 2)) AS distance FROM storages WHERE Price <= {price:.2f} AND Type = '{type}' ORDER BY distance ASC, Price DESC LIMIT 1;".format(capacity=pred["storage"]["capacity"], price=pred["storage"]["price"], type=pred["storage"]["type"]))).fetchone()
-        
-        gpu = connection.execute(text("SELECT *, SQRT(POW((Base_clock - {speed}), 2) + POW((Memory - {memory}), 2)) AS distance FROM gpus WHERE Price <= {price:.2f} ORDER BY Price DESC LIMIT 1;".format(speed=pred["gpu"]["speed"], memory=pred["gpu"]["memory"], price=pred["gpu"]["price"]))).fetchone()
-        
-        psu = connection.execute(text("SELECT * FROM psus WHERE Price <= {price:.2f} AND Efficiency = '{efficiency}' ORDER BY price DESC LIMIT 1;".format(price=pred["psu"]["price"], efficiency=pred["psu"]["efficiency"]))).fetchone()
-        
-        if (motherboard["Form factor"] == "ATX" or motherboard["Form factor"] == "Extended ATX"): 
-            cabinet_type = "ATX%"
-        elif motherboard["Form factor"] == "Mirco ATX":
-            cabinet_type = "MircoATX%"
-        else:
-            cabinet_type = "Mini ITX"
-        case = connection.execute(text("SELECT * FROM cases WHERE Cabinet_type LIKE '{cabinet_type}' AND Price <= {price:.2f} ORDER BY price DESC LIMIT 1;".format(cabinet_type=cabinet_type, price=pred["case"]["price"]))).fetchone()
+    cpu = find_cpu(pred["cpu"]["price"], pred["cpu"]["price"], pred["cpu"]["price"], pred["cpu"]["base_speed"], pred["cpu"]["turbo_speed"])
+    
+    if (pred["cooler"]["type"] != "None"):
+        cooler = find_cooler(pred["cooler"]["price"])
+    
+    motherboard = find_motherboard(cpu["Socket Type"], pred["motherboard"]["price"])
+    
+    ram1 = find_ram(cpu["Memory Generation"], pred["ram1"]["price"], pred["ram1"]["size"], round(pred["ram1"]["quantity"], 1), pred["ram1"]["speed"], pred["ram1"]["cl"])
+    
+    if (pred["ram2"]["quantity"] >= 1):
+        ram2 = find_ram(cpu["Memory Generation"], pred["ram2"]["price"], pred["ram2"]["size"], round(pred["ram2"]["quantity"], 1), pred["ram2"]["speed"], pred["ram2"]["cl"])
+    else:
+        ram2 = None
+    
+    storage = find_storage(pred["storage"]["capacity"], pred["storage"]["price"], pred["storage"]["type"])
+    
+    gpu = find_gpu(pred["gpu"]["speed"], pred["gpu"]["memory"], pred["gpu"]["price"])
+    
+    psu = find_psu(pred["psu"]["price"], pred["psu"]["efficiency"])
+    
+    if (motherboard["Form factor"] == "ATX" or motherboard["Form factor"] == "Extended ATX"): 
+        cabinet_type = "ATX%"
+    elif motherboard["Form factor"] == "Mirco ATX":
+        cabinet_type = "MircoATX%"
+    else:
+        cabinet_type = "Mini ITX"
+    case = find_case(cabinet_type, pred["case"]["price"])
 
-        build = {
-            'cpu': cpu,
-            'cooler': cooler,
-            'motherboard': motherboard,
-            'ram1': ram1,
-            'ram2': ram2,
-            'storage': storage,
-            'gpu': gpu,
-            'psu': psu,
-            'case': case
-        }
+    build = {
+        'cpu': cpu,
+        'cooler': cooler,
+        'motherboard': motherboard,
+        'ram1': ram1,
+        'ram2': ram2,
+        'storage': storage,
+        'gpu': gpu,
+        'psu': psu,
+        'case': case
+    }
 
-        print("Result Build: ")
-        for i in build:
-            print(build[i])
+    print("Result Build: ")
+    for i in build:
+        print(build[i])
     return build
 
 def cal_total_cost(build):
