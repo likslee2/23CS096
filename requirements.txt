@@ -1,7 +1,0 @@
-Flask
-gunicorn
-sqlalchemy
-pymysql
-numpy
-joblib
-scikit-learn
