@@ -3,6 +3,7 @@
 ## Getting Started
 
 ### Dependencies
+* OS: Window 11
 * IDE: Microsoft Visual Studio Code
 * IDE Extension: Live Server
 * Language: Python (Anaconda Version: 23.7.4)
